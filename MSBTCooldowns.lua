@@ -232,9 +232,9 @@ local function OnUpdate(frame, elapsed)
 		local currentTime = GetTime()
 		for cooldownID, usedTime in pairs(watchItemIDs) do
 			if (currentTime >= (usedTime + 1)) then
-	lastCooldownIDs["item"] = cooldownID
-				OnUpdateCooldown("item", GetItemCooldown)
-	watchItemIDs[cooldownID] = nil
+				lastCooldownIDs["item"] = cooldownID
+				OnUpdateCooldown("item", C_Container.GetItemCooldown)
+				watchItemIDs[cooldownID] = nil
 				break
 			end
 		end
@@ -242,7 +242,7 @@ local function OnUpdate(frame, elapsed)
 		-- Loop through all of the active cooldowns.
 		local currentTime = GetTime()
 		for cooldownType, cooldowns in pairs(activeCooldowns) do
-			local cooldownFunc = (cooldownType == "item") and GetItemCooldown or GetSpellCooldown
+			local cooldownFunc = (cooldownType == "item") and C_Container.GetItemCooldown or GetSpellCooldown
 			local infoFunc = (cooldownType == "item") and GetItemInfo or GetSpellInfo
 			for cooldownID, remainingDuration in pairs(cooldowns) do
 				-- Ensure the cooldown is still valid.
@@ -429,11 +429,8 @@ local function UseContainerItemHook(bag, slot)
 
 	-- Get item id for the used bag and slot.
 	local itemID
-	if IsClassic then
-		itemID = GetContainerItemID(bag, slot)
-	else
-		itemID = C_Container.GetContainerItemID(bag, slot)
-	end
+	itemID = C_Container.GetContainerItemID(bag, slot)
+	
 	if (itemID) then OnItemUse(itemID) end
 end
 
@@ -472,11 +469,8 @@ _, playerClass = UnitClass("player")
 -- Setup hooks.
 hooksecurefunc("UseAction", UseActionHook)
 hooksecurefunc("UseInventoryItem", UseInventoryItemHook)
-if IsClassic then
-	hooksecurefunc("UseContainerItem", UseContainerItemHook)
-else
-	hooksecurefunc(C_Container, "UseContainerItem", UseContainerItemHook)
-end
+
+hooksecurefunc(C_Container, "UseContainerItem", UseContainerItemHook)
 hooksecurefunc("UseItemByName", UseItemByNameHook)
 
 -- Specify the abilities that reset cooldowns.

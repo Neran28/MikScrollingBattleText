@@ -76,6 +76,7 @@ local function AnimatePowNormal(displayEvent, animationProgress)
 	-- Reset the font properties to normal.
 	else
 		local fontPath, _, fontOutline = displayEvent.fontString:GetFont()
+		displayEvent.fontString:SetTextHeight(displayEvent.fontSize)
 		displayEvent.fontString:SetFont(fontPath, displayEvent.fontSize, fontOutline)
 	end
 end
